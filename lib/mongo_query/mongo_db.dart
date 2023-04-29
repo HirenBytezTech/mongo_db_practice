@@ -6,12 +6,10 @@ import 'package:mongo_db_practice/utils/constants.dart';
 import '../model/mongo_model.dart';
 
 class MongoDatabase {
-
   static var db, userCollection;
 
-
   /// Create database
-  static connectMongo () async {
+  static connectMongo() async {
     db = await Db.create(mongoDbUrl);
     await db.open();
     inspect(db);
@@ -20,16 +18,27 @@ class MongoDatabase {
   }
 
   /// Insert into database
-  static Future<String> insertMongo (MongoData data) async {
-    try{
+  static Future<String> insertMongo(MongoData data) async {
+    try {
       var result = await userCollection.insertOne(data.toJson());
-      if(result.isSuccess){
+      if (result.isSuccess) {
         return "succefull";
-      }else{
+      } else {
         return "unsuccefull";
       }
-    }catch (e){
+    } catch (e) {
       return e.toString();
     }
+  }
+
+  /// View / display data
+  static Future<List<Map<String, dynamic>>> getData() async {
+    final getAllData = await userCollection.find().toList();
+    return getAllData;
+  }
+
+  /// Update data
+  static updateData () {
+
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:mongo_dart/mongo_dart.dart';
+
 List<MongoData> MongoDataFromJson(String str) =>
     List<MongoData>.from(json.decode(str).map((x) => MongoData.fromJson(x)));
 
@@ -8,21 +10,21 @@ String MongoDataToJson(List<MongoData> data) =>
 
 class MongoData {
   MongoData({
-    required this.id,
+    this.id,
     required this.firstname,
     required this.lastname,
     required this.email,
     required this.phone,
   });
 
-  Object id;
+  ObjectId? id;
   String firstname;
   String lastname;
   String email;
   String phone;
 
   factory MongoData.fromJson(Map<String, dynamic> json) => MongoData(
-        id: json["id"],
+        id: json["_id"],
         firstname: json["firstname"],
         lastname: json["lastname"],
         email: json["email"],
@@ -30,7 +32,7 @@ class MongoData {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "_id": id,
         "firstname": firstname,
         "lastname": lastname,
         "email": email,

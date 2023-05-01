@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:mongo_db_practice/utils/constants.dart';
@@ -22,9 +23,9 @@ class MongoDatabase {
     try {
       var result = await userCollection.insertOne(data.toJson());
       if (result.isSuccess) {
-        return "succefull";
+        return "successful";
       } else {
-        return "unsuccefull";
+        return "unsuccessful";
       }
     } catch (e) {
       return e.toString();
@@ -38,7 +39,21 @@ class MongoDatabase {
   }
 
   /// Update data
-  static updateData () {
+  static Future<void> updateData(MongoData data) async {
+    var response = await userCollection.update(await userCollection.findOne(where.id(data.id!)),{
+        // "_id" : data.id,
+        "firstname": data.firstname,
+        "lastname": data.lastname,
+        "email": data.email,
+        "phone": data.phone,
+      });
+      print("response ==> ${response.toString()}");
+      // inspect(response);
+      // await db.close();
+  }
 
+  /// delete data
+  static deleteData(MongoData data) async {
+    await userCollection.remove(where.id(data.id!));
   }
 }

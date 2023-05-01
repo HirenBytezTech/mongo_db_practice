@@ -26,10 +26,11 @@ class _ViewDataState extends State<ViewData> {
             } else {
               if (snapshot.hasData) {
                 var lengthData = snapshot.data!.length;
-                return ListView.builder(itemCount: lengthData,
+                return ListView.builder(
+                  itemCount: lengthData,
                   itemBuilder: (context, index) {
                     return displayCard(
-                        MongoData.fromJson(snapshot.data![index]));
+                        MongoData.fromJson(snapshot.data![index]),context);
                   },
                 );
               } else {
@@ -44,21 +45,43 @@ class _ViewDataState extends State<ViewData> {
     );
   }
 
-  Widget displayCard(MongoData data) {
-
-    return Card(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-      Column(children: [
-        Text(data.id.toString()),
-        Text(data.firstname),
-        Text(data.lastname),
-        Text(data.email,style: const TextStyle(color: Colors.red)),
-        Text(data.phone,style: const TextStyle(color: Colors.blue),),
-      ],),
-      IconButton(onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(data: data),));
-      }, icon: const Icon(Icons.edit)),
-
-    ]),
+  Widget displayCard(MongoData data,context) {
+    return Card(
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Expanded(flex: 4,
+          child: Column(
+            children: [
+              Text(data.id.toString()),
+              Text(data.firstname),
+              Text(data.lastname),
+              Text(data.email, style: const TextStyle(color: Colors.red)),
+              Text(
+                data.phone,
+                style: const TextStyle(color: Colors.blue),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: IconButton(
+              onPressed: () {
+                Navigator
+                    .push(context,
+                    MaterialPageRoute(
+                      builder: (context) => MyHomePage(data: data),
+                    )).whenComplete(() => setState(() {}));
+                },
+              icon: const Icon(Icons.edit)),
+        ),
+        Expanded(
+          child: IconButton(
+              onPressed: () async {
+                await MongoDatabase.deleteData(data);
+                setState(() {});
+              },
+              icon: const Icon(Icons.delete)),
+        ),
+      ]),
     );
   }
 }

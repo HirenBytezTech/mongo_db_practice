@@ -48,10 +48,15 @@ class _MyHomePageState extends State<MyHomePage> {
         TextField(controller: emailController),
         TextField(controller: numberController),
         ElevatedButton(
-            onPressed: () {
-              insterData();
+            onPressed: () async {
+              if(widget.data != null){
+                await updateData();
+                Navigator.pop(context);
+              } else {
+                insertData();
+              }
             },
-            child: const Text("Insert Data")),
+            child: widget.data != null ?  const Text("Update Data")  :  const Text("Insert Data")),
         ElevatedButton(
             onPressed: () {
               Navigator.push(
@@ -65,18 +70,25 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  insterData() async {
-    var _id = M.ObjectId;
+  updateData () async {
     final data = MongoData(
-        id: "$_id",
+        id: widget.data!.id,
         firstname: firstnameController.text,
         lastname: lastnameController.text,
         email: emailController.text,
         phone: numberController.text);
-    print("data == > ${data.firstname}");
+    await MongoDatabase.updateData(data);
+  }
+
+  insertData() async {
+    final data = MongoData(
+        firstname: firstnameController.text,
+        lastname: lastnameController.text,
+        email: emailController.text,
+        phone: numberController.text);
     final result = await MongoDatabase.insertMongo(data);
     print("object ==> $result");
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Inserted ID $_id")));
+        .showSnackBar(const SnackBar(content: Text("Inserted ID ")));
   }
 }

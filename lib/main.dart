@@ -1,7 +1,7 @@
 // email used for mongo hirenbyteztech2023@gmail.com
 import 'package:flutter/material.dart';
 
-import 'home_page.dart';
+import 'pages/home_page.dart';
 import 'mongo_query/mongo_db.dart';
 
 void main() async{
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
